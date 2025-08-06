@@ -11,6 +11,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -27,6 +28,18 @@ fun ParameterInputs(modifier: Modifier = Modifier, viewModel: ParameterInputsVie
     val inputtedWeight by viewModel.weight
     val inputtedHeight by viewModel.height
 
+
+    // Navigation handler
+    LaunchedEffect(Unit) {
+
+        viewModel.validInputEvent.collect { isInputValid ->
+            if (isInputValid) {
+                navController.navigate(Routes.resultsScreen)
+            }
+        }
+    }
+
+
     Box(modifier = modifier) {
 
         Column (
@@ -40,7 +53,7 @@ fun ParameterInputs(modifier: Modifier = Modifier, viewModel: ParameterInputsVie
             OutlinedTextField(
                 modifier = Modifier.padding(bottom = 20.dp),
                 value = inputtedWeight,
-                onValueChange = { viewModel.onWeightChange(it) },
+                onValueChange = { newWeight -> viewModel.onWeightChange(newWeight) },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                 label = { Text(stringResource(id = R.string.weight_label)) }
             )
@@ -49,7 +62,7 @@ fun ParameterInputs(modifier: Modifier = Modifier, viewModel: ParameterInputsVie
             OutlinedTextField(
                 modifier = Modifier.padding(bottom = 80.dp),
                 value = inputtedHeight,
-                onValueChange = { viewModel.onHeightChange(it) },
+                onValueChange = { newWeight -> viewModel.onHeightChange(newWeight) },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                 label = { Text(stringResource(id = R.string.height_label)) }
             )
@@ -57,7 +70,6 @@ fun ParameterInputs(modifier: Modifier = Modifier, viewModel: ParameterInputsVie
             // Calculate BMI Button
             Button(
                 onClick = {
-                    navController.navigate(Routes.resultsScreen)
                     viewModel.onButtonClick()
                 },
                 modifier = Modifier.padding(horizontal = 20.dp, vertical = 80.dp).fillMaxWidth()
