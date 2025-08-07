@@ -34,7 +34,7 @@ fun ParameterInputs(modifier: Modifier = Modifier, viewModel: ParameterInputsVie
 
         viewModel.validInputEvent.collect { isInputValid ->
             if (isInputValid) {
-                navController.navigate(Routes.resultsScreen)
+                navController.navigate(Routes.resultsScreen + "?weight=${inputtedWeight}&height=${inputtedHeight}")
             }
         }
     }

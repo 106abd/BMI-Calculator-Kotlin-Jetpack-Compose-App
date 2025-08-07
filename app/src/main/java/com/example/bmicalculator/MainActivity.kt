@@ -36,23 +36,29 @@ class MainActivity : ComponentActivity() {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
 
                     // Provides routes for different screens
-                    NavHost(navController = navController, startDestination = Routes.resultsScreen, builder = {
+                    NavHost(navController = navController, startDestination = Routes.resultsScreen + "?weight=&height=", builder = {
 
                         // Results.kt Screen
-                        composable(route = Routes.resultsScreen) {
+                        composable(route = Routes.resultsScreen + "?weight={weight}&height={height}") {
+                            val weight = it.arguments?.getString("weight")
+                            val height = it.arguments?.getString("height")
+
                             Results(
                                 modifier = Modifier.padding(innerPadding),
                                 viewModel = resultsViewModel,
-                                navController = navController
+                                navController = navController,
+                                weight = weight?: "",
+                                height = height?: ""
                             )}
 
 
                         // ParameterInputs.kt Screen
                         composable(route = Routes.parameterInputsScreen) {
+
                             ParameterInputs(
                                 modifier = Modifier.padding(innerPadding),
                                 viewModel = parameterInputsViewModel,
-                                navController = navController
+                                navController = navController,
                             )
                         }
                     })
