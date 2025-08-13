@@ -1,8 +1,6 @@
 package com.example.bmicalculator
 
 import android.util.Log
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.bmicalculator.db.BMISchema
@@ -22,12 +20,6 @@ class ResultsViewModel : ViewModel() {
     val bmiData = bmiDao.getData()
         .stateIn(viewModelScope, SharingStarted.Lazily, null)
 
-    private val _height = mutableStateOf("")
-    val height: State<String> get() = _height
-
-    private val _weight = mutableStateOf("")
-    val weight: State<String> get() = _weight
-
 
     // Calculate BMI Event Function
     fun onButtonClick() {
@@ -35,6 +27,7 @@ class ResultsViewModel : ViewModel() {
         Log.i("Results", bmiData.value.toString())
     }
 
+    // Function that updates the database if a height and weight value were passed as parameters
     fun updateParameters(inputWeight: String, inputHeight: String) {
 
         val weightValue = inputWeight.toDoubleOrNull()
@@ -63,9 +56,6 @@ class ResultsViewModel : ViewModel() {
     }
 
     fun calculateBMI(inputWeight: Double, inputHeight: Double) : String {
-
-            _weight.value = "$inputWeight kg"
-            _height.value = "$inputHeight m"
             val bmi = (inputWeight / (inputHeight * inputHeight)).toString()
             return bmi
     }

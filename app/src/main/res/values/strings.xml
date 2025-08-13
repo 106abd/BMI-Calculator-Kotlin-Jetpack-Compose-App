@@ -6,4 +6,5 @@
     <string name="height_label">Height</string>
     <string name="calculate_button_label">CALCULATE BMI</string>
     <string name="bmi_results_label">"Press the button below to obtain your BMI."</string>
+    <string name="bmi_date_label">"Your BMI from "</string>
 </resources>

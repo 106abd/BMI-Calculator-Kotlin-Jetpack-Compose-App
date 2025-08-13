@@ -1,6 +1,5 @@
 package com.example.bmicalculator
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,13 +14,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 @Composable
 fun Results(modifier: Modifier = Modifier, viewModel: ResultsViewModel, navController: NavController,
@@ -56,6 +56,12 @@ fun Results(modifier: Modifier = Modifier, viewModel: ResultsViewModel, navContr
                 fontSize = 15.sp
             )
 
+            bmiData.value?.let { data ->
+                Text(
+                    text = stringResource(R.string.bmi_date_label) + SimpleDateFormat("dd/MM/yyyy", Locale.CANADA).format(data.date) + ":",
+                    fontSize = 16.sp
+                )
+            }
 
             // Displaying Last BMI Results
             Text(
