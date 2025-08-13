@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -26,8 +27,9 @@ import androidx.navigation.NavController
 fun Results(modifier: Modifier = Modifier, viewModel: ResultsViewModel, navController: NavController,
             weight: String = "", height: String = "") {
 
-    var resultBMI: String = stringResource(R.string.bmi_results_label)
-    resultBMI = viewModel.calculateBMI(weight, height, resultBMI)
+    val bmiData = viewModel.bmiData.collectAsState()
+    viewModel.updateParameters(inputWeight = weight, inputHeight = height)
+    val resultBMI: String = bmiData.value?.bmi ?: stringResource(R.string.bmi_results_label)
 
     Box(modifier = modifier) {
 
@@ -39,7 +41,7 @@ fun Results(modifier: Modifier = Modifier, viewModel: ResultsViewModel, navContr
 
             // Display Last Inputted Weight
             Text(
-                text = stringResource(id = R.string.weight_label) + ": " + viewModel.weight.value,
+                text = stringResource(id = R.string.weight_label) + ": " + (bmiData.value?.weight ?: ""),
                 modifier = Modifier.padding(bottom = 10.dp),
                 fontWeight = FontWeight.Bold,
                 fontSize = 15.sp
@@ -48,7 +50,7 @@ fun Results(modifier: Modifier = Modifier, viewModel: ResultsViewModel, navContr
 
             // Display Last Inputted Height
             Text(
-                text = stringResource(id = R.string.height_label) + ": " + viewModel.height.value,
+                text = stringResource(id = R.string.height_label) + ": " + (bmiData.value?.height ?: ""),
                 modifier = Modifier.padding(bottom = 80.dp),
                 fontWeight = FontWeight.Bold,
                 fontSize = 15.sp

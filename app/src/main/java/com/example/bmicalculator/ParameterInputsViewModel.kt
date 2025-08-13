@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 
 class ParameterInputsViewModel : ViewModel() {
+
     private val _weight = mutableStateOf("")
     val weight: State<String> get() = _weight
 

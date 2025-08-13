@@ -10,8 +10,8 @@ data class BMISchema(
     @PrimaryKey
     val entryNo: Int = 0,
     var date: Date,
-    var height: Double,
-    var weight: Double,
-    var bmi: Double
+    var height: String,
+    var weight: String,
+    var bmi: String
 
 )

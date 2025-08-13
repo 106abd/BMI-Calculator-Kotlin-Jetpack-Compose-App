@@ -4,8 +4,23 @@ import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.bmicalculator.db.BMISchema
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
+import java.time.Instant
+import java.util.Date
 
 class ResultsViewModel : ViewModel() {
+
+    // Get Dao interface from initialized db in main application
+    private val bmiDao = MainApplication.bmiDB.getBMIDao()
+
+    // Create StateFlow variable
+    val bmiData = bmiDao.getData()
+        .stateIn(viewModelScope, SharingStarted.Lazily, null)
 
     private val _height = mutableStateOf("")
     val height: State<String> get() = _height
@@ -17,23 +32,42 @@ class ResultsViewModel : ViewModel() {
     // Calculate BMI Event Function
     fun onButtonClick() {
         Log.i("Button Clicked", "")
+        Log.i("Results", bmiData.value.toString())
     }
 
-    fun calculateBMI(inputWeight: String, inputHeight: String, defaultMsg: String) : String {
+    fun updateParameters(inputWeight: String, inputHeight: String) {
 
         val weightValue = inputWeight.toDoubleOrNull()
         val heightValue = inputHeight.toDoubleOrNull()
 
-        if (weightValue != null && heightValue !== null && heightValue > 0) {
+        if (weightValue != null && heightValue != null && heightValue > 0) {
+            val bmiValue = calculateBMI(inputWeight = weightValue, inputHeight = heightValue)
+
+            val bmiParameters = BMISchema(
+                date = Date.from(Instant.now()),
+                weight = inputWeight,
+                height = inputHeight,
+                bmi = bmiValue
+            )
+
+            if(bmiData.value != null) {
+                viewModelScope.launch(Dispatchers.IO) {
+                    bmiDao.updateData(bmiData = bmiParameters)
+                }
+            } else {
+                viewModelScope.launch(Dispatchers.IO) {
+                    bmiDao.insertData(bmiData = bmiParameters)
+                }
+            }
+        }
+    }
+
+    fun calculateBMI(inputWeight: Double, inputHeight: Double) : String {
 
             _weight.value = "$inputWeight kg"
             _height.value = "$inputHeight m"
-            val bmi = "Your BMI: " + (weightValue / (heightValue * heightValue)).toString()
+            val bmi = (inputWeight / (inputHeight * inputHeight)).toString()
             return bmi
-
-        } else {
-            return defaultMsg
-        }
     }
 
 }
