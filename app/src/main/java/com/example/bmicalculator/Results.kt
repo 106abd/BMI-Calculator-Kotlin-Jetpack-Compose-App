@@ -29,7 +29,6 @@ fun Results(modifier: Modifier = Modifier, viewModel: ResultsViewModel, navContr
 
     val bmiData = viewModel.bmiData.collectAsState()
     viewModel.updateParameters(inputWeight = weight, inputHeight = height)
-    val resultBMI: String = bmiData.value?.bmi ?: stringResource(R.string.bmi_results_label)
 
     Box(modifier = modifier) {
 
@@ -65,7 +64,7 @@ fun Results(modifier: Modifier = Modifier, viewModel: ResultsViewModel, navContr
 
             // Displaying Last BMI Results
             Text(
-                text = resultBMI,
+                text = bmiData.value?.bmi ?: stringResource(R.string.bmi_results_label),
                 textAlign = TextAlign.Center,
                 lineHeight = 40.sp,
                 fontWeight = FontWeight.Bold,

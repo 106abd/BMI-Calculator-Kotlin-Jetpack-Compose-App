@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.time.Instant
 import java.util.Date
+import java.util.Locale
 
 class ResultsViewModel : ViewModel() {
 
@@ -56,8 +57,8 @@ class ResultsViewModel : ViewModel() {
     }
 
     fun calculateBMI(inputWeight: Double, inputHeight: Double) : String {
-            val bmi = (inputWeight / (inputHeight * inputHeight)).toString()
-            return bmi
+            val bmi = (inputWeight / (inputHeight * inputHeight))
+            return String.format(Locale.CANADA, "%.2f", bmi)
     }
 
 }
